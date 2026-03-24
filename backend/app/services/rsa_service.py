@@ -1,4 +1,5 @@
 import time
+import base64
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 
@@ -50,7 +51,8 @@ def run_rsa_test(message: str) -> dict:
     return {
         "algorithm": "RSA-2048",
         "input_message": message,
-        "decrypted_message": decrypted.decode("utf-8"),
+        "encrypted_message": base64.b64encode(ciphertext).decode("utf-8"),
+        "recovered_message": decrypted.decode("utf-8"),
         "keygen_time_ms": round(keygen_time, 4),
         "encrypt_time_ms": round(encrypt_time, 4),
         "decrypt_time_ms": round(decrypt_time, 4),

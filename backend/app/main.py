@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import mlkem
-from app.routes import rsa
+from app.routers import rsa, mlkem, rsa_signature, mldsa_signature, benchmark
 
 app = FastAPI(
-    title="Crypto Comparison API",
+    title="PQC vs Traditional Crypto API",
+    version="1.0.0",
     docs_url="/swagger",
-    redoc_url=None
+    redoc_url=None,
+    description="Backend API for comparing traditional cryptography and post-quantum cryptography."
 )
 
 app.add_middleware(
@@ -18,10 +19,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(rsa.router, prefix="/api/rsa", tags=["RSA"])
-app.include_router(mlkem.router, prefix="/api/mlkem", tags=["ML-KEM"])
+app.include_router(rsa.router, prefix="/api/rsa", tags=["RSA Encryption"])
+app.include_router(mlkem.router, prefix="/api/mlkem", tags=["ML-KEM Encryption"])
+app.include_router(rsa_signature.router, prefix="/api/rsa-signature", tags=["RSA Signature"])
+app.include_router(mldsa_signature.router, prefix="/api/mldsa-signature", tags=["ML-DSA Signature"])
+app.include_router(benchmark.router, prefix="/api/benchmark", tags=["Benchmark"])
 
 
 @app.get("/")
 def root():
-    return {"message": "API is running"}
+    return {
+        "message": "PQC vs Traditional Crypto backend is running"
+    }
